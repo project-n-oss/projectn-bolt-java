@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group 'com.projectn.bolt'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation platform('software.amazon.awssdk:bom:2.14.23')
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:sts'
+    implementation 'software.amazon.awssdk:apache-client'
+    implementation 'software.amazon.awssdk:utils'
+}
+
+task uberJar(type: Jar) {
+    archiveBaseName = 'bolt-java-sdk'
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
+
