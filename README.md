@@ -10,7 +10,7 @@ using the included project files.
 ### Requirements
 
 - Java 8.0 or later
-- Apache Maven (3.0 or higher)
+- Apache Maven (3.0 or higher) / Gradle (5.0 or higher)
 
 ### Build From Source
 
@@ -25,8 +25,18 @@ cd projectn-bolt-java
 mvn clean install
 ```
 
+#### Gradle
+* Download the source, build and create a local package(jar):
+
+```bash
+git clone https://gitlab.com/projectn-oss/projectn-bolt-java.git
+cd projectn-bolt-java
+gradle uberJar
+```
+
 ### Using Java SDK for Bolt
 
+#### Maven
 * Import the SDK into your project by adding the following dependency to your project's POM:
 
 ```xml
@@ -36,6 +46,15 @@ mvn clean install
     <version>1.0</version>
 </dependency>
 ```
+
+#### Gradle
+* Add the local package as dependency to your project's `build.gradle` file:
+  * In the following case, your project and source have been cloned in the same root directory
+
+```groovy
+implementation files('../projectn-bolt-java/build/libs/bolt-java-sdk-1.0.jar')
+```
+
 
 ### Usage
 
