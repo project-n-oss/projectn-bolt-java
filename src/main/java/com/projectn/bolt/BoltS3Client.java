@@ -8,14 +8,27 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 
 import java.net.URI;
 
+/**
+ * Service Client for accessing S3 via Bolt.
+ * It provides the same builder as S3Client to configure and create a service client. Its endpoint always resolves to
+ * Bolt Service URL as specified via the 'BOLT_URL' environment variable.
+ */
 public interface BoltS3Client extends S3Client {
 
     String BoltServiceUrl = System.getenv("BOLT_URL");
 
+    /**
+     * Creates a S3Client with the credentials loaded from the application's default configuration.
+     * @return S3Client
+     */
     static S3Client create() {
         return builder().build();
     }
 
+    /**
+     * Constructs a builder that can be used to configure and create a S3Client.
+     * @return S3ClientBuilder
+     */
     static S3ClientBuilder builder() {
         return S3Client.builder()
                 .endpointOverride(URI.create(BoltServiceUrl))

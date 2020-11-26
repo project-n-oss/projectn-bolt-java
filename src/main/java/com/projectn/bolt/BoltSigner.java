@@ -19,6 +19,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * BoltSigner is the AWS4 protocol signer for Bolt. It uses the credentials from the incoming S3 request and
+ * canonically signs the request as a STS GetCallerIdentity API call.
+ */
 public class BoltSigner implements Signer {
 
     private static final String StsEndpoint = "https://sts.amazonaws.com/";
@@ -33,6 +37,13 @@ public class BoltSigner implements Signer {
         return new BoltSigner();
     }
 
+    /**
+     * Method that takes in a Request and returns the signed version of the request that has been canonically signed as
+     * a STS GetCallerIdentity API call.
+     * @param request The request to sign
+     * @param executionAttributes attributes (e.g credentials) required for signing the request
+     * @return signed input request
+     */
     public SdkHttpFullRequest sign(SdkHttpFullRequest request, ExecutionAttributes executionAttributes) {
 
         Aws4SignerParams iamSignerParams = Aws4SignerParams.builder().
@@ -44,7 +55,17 @@ public class BoltSigner implements Signer {
         return sign(request, iamSignerParams);
     }
 
+    /**
+     * Method computes and signs the specified request, using AWS4 signing protocol, as a STS GetCallerIdentity API call.
+     * The method uses credentials from the incoming request to compute the signature and adds it to the 'Authorization'
+     * request header.
+     * @param request The request to sign
+     * @param signingParams parameters required for signing the request
+     * @return signed input request
+     */
     public SdkHttpFullRequest sign(SdkHttpFullRequest request, Aws4SignerParams signingParams) {
+
+        // Construct a STS GetCallerIdentity Request
         SdkHttpFullRequest iamRequest = new GetCallerIdentityRequestMarshaller(AwsQueryProtocolFactory
                 .builder().clientConfiguration(SdkClientConfiguration.builder()
                         .option(SdkClientOption.ENDPOINT, URI.create(StsEndpoint))
@@ -67,7 +88,8 @@ public class BoltSigner implements Signer {
         SdkHttpFullRequest.Builder signedRequestBuilder = request.toBuilder();
         Map<String, List<String>> iamHeaders = signedIamRequest.headers();
 
-
+        // Add request headers that are used to compute signature. Bolt will forward these request headers to the STS
+        // GetCallerIdentity API
         signedRequestBuilder.putHeader("X-Amz-Security-Token", iamHeaders.get("X-Amz-Security-Token"));
         signedRequestBuilder.putHeader("X-Amz-Date", iamHeaders.get("X-Amz-Date"));
         signedRequestBuilder.putHeader("Authorization", iamHeaders.get("Authorization"));
