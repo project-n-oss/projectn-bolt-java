@@ -2,6 +2,7 @@ package com.projectn.bolt;
 
 import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.core.client.config.SdkAdvancedClientOption;
+import software.amazon.awssdk.regions.internal.util.EC2MetadataUtils;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.S3Configuration;
@@ -15,7 +16,7 @@ import java.net.URI;
  */
 public interface BoltS3Client extends S3Client {
 
-    String BoltServiceUrl = System.getenv("BOLT_URL");
+    String BoltServiceUrl = System.getenv("BOLT_URL").replace("{region}", Region());
 
     /**
      * Creates a S3Client with the credentials loaded from the application's default configuration.
@@ -38,5 +39,14 @@ public interface BoltS3Client extends S3Client {
                 .overrideConfiguration(ClientOverrideConfiguration.builder()
                         .putAdvancedOption(SdkAdvancedClientOption.SIGNER, BoltSigner.create())
                         .build());
+    }
+
+    static String Region() {
+        String region = System.getenv("AWS_REGION");
+        if (region != null) {
+            return region;
+        } else {
+            return EC2MetadataUtils.getEC2InstanceRegion();
+        }
     }
 }
