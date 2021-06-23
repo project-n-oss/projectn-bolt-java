@@ -90,9 +90,18 @@ public class BoltSigner implements Signer {
 
         // Add request headers that are used to compute signature. Bolt will forward these request headers to the STS
         // GetCallerIdentity API
-        signedRequestBuilder.putHeader("X-Amz-Security-Token", iamHeaders.get("X-Amz-Security-Token"));
-        signedRequestBuilder.putHeader("X-Amz-Date", iamHeaders.get("X-Amz-Date"));
-        signedRequestBuilder.putHeader("Authorization", iamHeaders.get("Authorization"));
+
+        if (iamHeaders.containsKey("X-Amz-Security-Token")) {
+            signedRequestBuilder.putHeader("X-Amz-Security-Token", iamHeaders.get("X-Amz-Security-Token"));
+        }
+
+        if (iamHeaders.containsKey("X-Amz-Date")) {
+            signedRequestBuilder.putHeader("X-Amz-Date", iamHeaders.get("X-Amz-Date"));
+        }
+
+        if (iamHeaders.containsKey("Authorization")) {
+            signedRequestBuilder.putHeader("Authorization", iamHeaders.get("Authorization"));
+        }
 
         return signedRequestBuilder.build();
     }

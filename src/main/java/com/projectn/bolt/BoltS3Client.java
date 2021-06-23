@@ -16,7 +16,7 @@ import java.net.URI;
  */
 public interface BoltS3Client extends S3Client {
 
-    String BoltServiceUrl = System.getenv("BOLT_URL").replace("{region}", Region());
+    String BoltServiceUrl = System.getenv("BOLT_URL");
 
     /**
      * Creates a S3Client with the credentials loaded from the application's default configuration.
@@ -31,8 +31,13 @@ public interface BoltS3Client extends S3Client {
      * @return S3ClientBuilder
      */
     static S3ClientBuilder builder() {
+        String BoltRegionalServiceUrl = BoltServiceUrl;
+        if (BoltRegionalServiceUrl.contains("{region}")) {
+            BoltRegionalServiceUrl = BoltRegionalServiceUrl.replace("{region}", Region());
+        }
+
         return S3Client.builder()
-                .endpointOverride(URI.create(BoltServiceUrl))
+                .endpointOverride(URI.create(BoltRegionalServiceUrl))
                 .serviceConfiguration(S3Configuration.builder()
                         .pathStyleAccessEnabled(true)
                         .build())
