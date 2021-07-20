@@ -1,4 +1,4 @@
-package com.projectn.bolt;
+package com.gitlab.projectn_oss.bolt;
 
 import software.amazon.awssdk.auth.signer.Aws4Signer;
 import software.amazon.awssdk.auth.signer.AwsSignerExecutionAttribute;
