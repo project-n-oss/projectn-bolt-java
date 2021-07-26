@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'com.projectn.bolt'
-version '1.0'
+group 'com.gitlab.projectn-oss'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -15,7 +15,7 @@ java {
 }
 
 dependencies {
-    implementation platform('software.amazon.awssdk:bom:2.14.23')
+    implementation platform('software.amazon.awssdk:bom:2.15.39')
     implementation 'software.amazon.awssdk:s3'
     implementation 'software.amazon.awssdk:sts'
     implementation 'software.amazon.awssdk:apache-client'
