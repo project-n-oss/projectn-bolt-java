@@ -1,13 +1,20 @@
 package com.gitlab.projectn_oss.bolt;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.MissingFormatArgumentException;
+
+import javax.net.ssl.SSLContext;
+
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+
 import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.core.client.config.SdkAdvancedClientOption;
-import software.amazon.awssdk.regions.internal.util.EC2MetadataUtils;
+import software.amazon.awssdk.http.SdkHttpClient;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
+import software.amazon.awssdk.http.apache.internal.conn.SdkTlsSocketFactory;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.S3Configuration;
-
-import java.net.URI;
 
 /**
  * Service Client for accessing S3 via Bolt.
@@ -16,42 +23,36 @@ import java.net.URI;
  */
 public interface BoltS3Client extends S3Client {
 
-    String BoltServiceUrl = System.getenv("BOLT_URL");
+    // Get bolt url from quicksilver. Not from the env
 
-    /**
-     * Creates a S3Client with the credentials loaded from the application's default configuration.
-     * @return S3Client
-     */
-    static S3Client create() {
+    static S3Client create(){
         return builder().build();
     }
 
-    /**
-     * Constructs a builder that can be used to configure and create a S3Client.
-     * @return S3ClientBuilder
-     */
-    static S3ClientBuilder builder() {
-        String BoltRegionalServiceUrl = BoltServiceUrl;
-        if (BoltRegionalServiceUrl.contains("{region}")) {
-            BoltRegionalServiceUrl = BoltRegionalServiceUrl.replace("{region}", Region());
-        }
 
+    static S3ClientBuilder builder(){
+        if (BoltConfig.CustomDomain == null){
+            throw new MissingFormatArgumentException("BOLT_CUSTOM_DOMAIN is not set. \n"+
+            "Set the environment variable to BOLT_CUSTOM_DOMAIN=my-bolt.my-domain.com. This can be obtained from `projectn ls`");  
+        }
+        SSLContext sslcontext = null;
+        try {
+            sslcontext = SSLContext.getDefault();
+        } catch (NoSuchAlgorithmException e1) {
+            System.out.println("SSL context is not initialized");
+            e1.printStackTrace();
+        }
+        ConnectionSocketFactory socketFactory = new SdkTlsSocketFactory(sslcontext, new BoltHostnameVerifier());
+
+        SdkHttpClient client = ApacheHttpClient.builder().socketFactory(socketFactory).build();
+        
         return S3Client.builder()
-                .endpointOverride(URI.create(BoltRegionalServiceUrl))
+                .httpClient(client)
                 .serviceConfiguration(S3Configuration.builder()
                         .pathStyleAccessEnabled(true)
                         .build())
                 .overrideConfiguration(ClientOverrideConfiguration.builder()
                         .putAdvancedOption(SdkAdvancedClientOption.SIGNER, BoltSigner.create())
                         .build());
-    }
-
-    static String Region() {
-        String region = System.getenv("AWS_REGION");
-        if (region != null) {
-            return region;
-        } else {
-            return EC2MetadataUtils.getEC2InstanceRegion();
-        }
     }
 }
