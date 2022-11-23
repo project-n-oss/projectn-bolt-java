@@ -53,6 +53,7 @@ public interface BoltS3Client extends S3Client {
                         .build())
                 .overrideConfiguration(ClientOverrideConfiguration.builder()
                         .putAdvancedOption(SdkAdvancedClientOption.SIGNER, BoltSigner.create())
+                        .putHeader("X-Bolt-Passthrough-Read", "disable")
                         .build());
     }
 }
