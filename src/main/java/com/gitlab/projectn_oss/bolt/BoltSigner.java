@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import software.amazon.awssdk.auth.signer.Aws4Signer;
 import software.amazon.awssdk.core.interceptor.ExecutionAttributes;
 import software.amazon.awssdk.core.signer.Signer;
@@ -43,7 +45,8 @@ public class BoltSigner implements Signer {
         if (BoltConfig.AuthBucket != null){
             sourceBucket = BoltConfig.AuthBucket;
         }
-        String headObjectURL = String.format("https://s3.%s.amazonaws.com/%s/xyz/auth", BoltConfig.Region, sourceBucket);
+        String prefix = getRandomString();
+        String headObjectURL = String.format("https://s3.%s.amazonaws.com/%s/%s/auth", BoltConfig.Region, sourceBucket, prefix);
 
         Builder requestBuilder = request.toBuilder();
         request = requestBuilder.uri(boltURI).build();
@@ -76,11 +79,15 @@ public class BoltSigner implements Signer {
         }
 
         signedRequestBuilder.putHeader("Host", BoltConfig.BoltHostname);
-        signedRequestBuilder.putHeader("X-Bolt-Auth-Prefix", "xyz");
+        signedRequestBuilder.putHeader("X-Bolt-Auth-Prefix", prefix);
         signedRequestBuilder.putHeader("User-Agent", String.format("%s%s", BoltConfig.UserAgentPrefix, request.headers().get("User-Agent")));
 
         request = signedRequestBuilder.build();
         return request;
+    }
+    private static String getRandomString(){
+        String chars = "qwertyuiopasdfghjklzxcvbnm";
+        return RandomStringUtils.random(4, chars);
     }
 
 }
