@@ -6,7 +6,7 @@
   <artifactId>projectn-bolt-aws-java</artifactId>
   <packaging>jar</packaging>
 
-  <version>1.0.0</version>
+  <version>1.0.2</version>
   <name>projectn-bolt-aws-java</name>
   <description>ProjectN Bolt Java Client Library</description>
   <url>https://gitlab.com/projectn-oss/projectn-bolt-java</url>
