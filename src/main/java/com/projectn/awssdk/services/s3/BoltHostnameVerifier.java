@@ -1,4 +1,4 @@
-package com.gitlab.projectn_oss.bolt;
+package com.projectn.awssdk.services.s3;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;

@@ -1,4 +1,4 @@
-package com.gitlab.projectn_oss.bolt;
+package com.projectn.awssdk.services.s3;
 
 import software.amazon.awssdk.core.retry.RetryPolicyContext;
 import software.amazon.awssdk.core.retry.conditions.RetryCondition;

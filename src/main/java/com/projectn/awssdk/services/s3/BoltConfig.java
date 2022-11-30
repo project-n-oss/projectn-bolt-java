@@ -1,4 +1,4 @@
-package com.gitlab.projectn_oss.bolt;
+package com.projectn.awssdk.services.s3;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
