@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.projectn.awssdk</groupId>
-  <artifactId>projectn-bolt-aws-java</artifactId>
+  <groupId>co.projectn</groupId>
+  <artifactId>bolt-java-sdk</artifactId>
   <packaging>jar</packaging>
 
   <version>1.0.2</version>
-  <name>projectn-bolt-aws-java</name>
+  <name>bolt-java-sdk</name>
   <description>ProjectN Bolt Java Client Library</description>
   <url>https://gitlab.com/projectn-oss/projectn-bolt-java</url>
 
@@ -141,7 +141,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.5</version>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -155,12 +155,12 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
+        <version>1.6.13</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
           <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>false</autoReleaseAfterClose>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
     </plugins>
