@@ -1,4 +1,4 @@
-package com.projectn.awssdk.services.s3;
+package ai.granica.awssdk.services.s3;
 
 import java.net.URI;
 import java.util.List;
@@ -20,15 +20,15 @@ import software.amazon.awssdk.http.SdkHttpMethod;
  * canonically signs the request as a STS GetCallerIdentity API call.
  */
 
-public class BoltSigner implements Signer {
+public class GranicaSigner implements Signer {
     private final Aws4Signer aws4Signer;
 
-    private BoltSigner() {
+    private GranicaSigner() {
         aws4Signer = Aws4Signer.create();
     }
 
-    public static BoltSigner create() {
-        return new BoltSigner();
+    public static GranicaSigner create() {
+        return new GranicaSigner();
     }
 
     /**
@@ -39,14 +39,14 @@ public class BoltSigner implements Signer {
      * @return signed input request
      */
     public SdkHttpFullRequest sign(SdkHttpFullRequest request, ExecutionAttributes executionAttributes) {
-        URI boltURI = BoltConfig.selectBoltEndpoints(request.method().name());
+        URI boltURI = GranicaConfig.selectBoltEndpoints(request.method().name());
         String sourceBucket = request.getUri().getRawPath().split("/").length > 1? 
                     request.getUri().getRawPath().split("/")[1] : "n-auth-dummy";
-        if (BoltConfig.AuthBucket != null){
-            sourceBucket = BoltConfig.AuthBucket;
+        if (GranicaConfig.AuthBucket != null){
+            sourceBucket = GranicaConfig.AuthBucket;
         }
         String prefix = getRandomString();
-        String headObjectURL = String.format("https://s3.%s.amazonaws.com/%s/%s/auth", BoltConfig.Region, sourceBucket, prefix);
+        String headObjectURL = String.format("https://s3.%s.amazonaws.com/%s/%s/auth", GranicaConfig.Region, sourceBucket, prefix);
 
         Builder requestBuilder = request.toBuilder();
         request = requestBuilder.uri(boltURI).build();
@@ -78,9 +78,9 @@ public class BoltSigner implements Signer {
             signedRequestBuilder.putHeader("x-amz-content-sha256", iamHeaders.get("x-amz-content-sha256"));
         }
 
-        signedRequestBuilder.putHeader("Host", BoltConfig.BoltHostname);
+        signedRequestBuilder.putHeader("Host", GranicaConfig.BoltHostname);
         signedRequestBuilder.putHeader("X-Bolt-Auth-Prefix", prefix);
-        signedRequestBuilder.putHeader("User-Agent", String.format("%s%s", BoltConfig.UserAgentPrefix, request.headers().get("User-Agent")));
+        signedRequestBuilder.putHeader("User-Agent", String.format("%s%s", GranicaConfig.UserAgentPrefix, request.headers().get("User-Agent")));
 
         request = signedRequestBuilder.build();
         return request;

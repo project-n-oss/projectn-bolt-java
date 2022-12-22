@@ -1,11 +1,11 @@
-package com.projectn.awssdk.services.s3;
+package ai.granica.awssdk.services.s3;
 
 import software.amazon.awssdk.core.retry.RetryPolicyContext;
 import software.amazon.awssdk.core.retry.conditions.RetryCondition;
 
 import software.amazon.awssdk.core.retry.conditions.SdkRetryCondition;
 
-public interface BoltRetryCondition extends RetryCondition {
+public interface GranicaRetryCondition extends RetryCondition {
 
     @Override
     default void requestSucceeded(RetryPolicyContext context) {
