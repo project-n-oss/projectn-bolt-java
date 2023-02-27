@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 
-import software.amazon.awssdk.regions.internal.util.EC2MetadataUtils;
+// import software.amazon.awssdk.regions.internal.util.EC2MetadataUtils;
 
 
 public class BoltConfig {
@@ -28,8 +28,10 @@ public class BoltConfig {
     static String WriteOrderEndpoints[] = { "main_write_endpoints", "failover_write_endpoints" };
     static List<String> HttpReadMethodTypes = Arrays.asList( "GET", "HEAD" ); // S3 operations get converted to one of the standard HTTP request methods https://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-s3.html
     
-    public static String Region = System.getenv("AWS_REGION") == null ? EC2MetadataUtils.getEC2InstanceRegion(): System.getenv("AWS_REGION");
-    public static String ZoneId = System.getenv("AWS_ZONE_ID") == null ? EC2MetadataUtils.getAvailabilityZone(): System.getenv("AWS_ZONE_ID");
+    public static String Region = System.getenv("AWS_REGION");
+    public static String ZoneId = System.getenv("AWS_ZONE_ID");
+    // public static String Region = System.getenv("AWS_REGION") == null ? EC2MetadataUtils.getEC2InstanceRegion(): System.getenv("AWS_REGION");
+    // public static String ZoneId = System.getenv("AWS_ZONE_ID") == null ? EC2MetadataUtils.getAvailabilityZone(): System.getenv("AWS_ZONE_ID");
     public static String CustomDomain =  System.getenv("BOLT_CUSTOM_DOMAIN");
     public static String AuthBucket = System.getenv("BOLT_AUTH_BUCKET");
     public static String UserAgentPrefix = System.getenv("USER_AGENT_PREFIX") == null? "projectn/": String.format("%s/",System.getenv("USER_AGENT_PREFIX"));
