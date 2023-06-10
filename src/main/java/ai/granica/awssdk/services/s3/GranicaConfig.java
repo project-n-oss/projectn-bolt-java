@@ -1,4 +1,4 @@
-package com.projectn.awssdk.services.s3;
+package ai.granica.awssdk.services.s3;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import software.amazon.awssdk.regions.internal.util.EC2MetadataUtils;
 
 
-public class BoltConfig {
+public class GranicaConfig {
 
     static String ReadOrderEndpoints[] = { "main_read_endpoints", "main_write_endpoints", "failover_read_endpoints", "failover_write_endpoints" };
     static String WriteOrderEndpoints[] = { "main_write_endpoints", "failover_write_endpoints" };
@@ -30,7 +30,7 @@ public class BoltConfig {
     
     public static String Region = System.getenv("AWS_REGION") == null ? EC2MetadataUtils.getEC2InstanceRegion(): System.getenv("AWS_REGION");
     public static String ZoneId = System.getenv("AWS_ZONE_ID") == null ? EC2MetadataUtils.getAvailabilityZone(): System.getenv("AWS_ZONE_ID");
-    public static String CustomDomain =  System.getenv("BOLT_CUSTOM_DOMAIN");
+    public static String CustomDomain =  System.getenv("GRANICA_CUSTOM_DOMAIN") != null ? System.getenv("GRANICA_CUSTOM_DOMAIN") : System.getenv("BOLT_CUSTOM_DOMAIN");
     public static String AuthBucket = System.getenv("BOLT_AUTH_BUCKET");
     public static String UserAgentPrefix = System.getenv("USER_AGENT_PREFIX") == null? "projectn/": String.format("%s/",System.getenv("USER_AGENT_PREFIX"));
     static String BoltHostname = String.format("bolt.%s.%s", Region, CustomDomain);

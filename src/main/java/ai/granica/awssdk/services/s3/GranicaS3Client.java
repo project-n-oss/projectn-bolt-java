@@ -1,4 +1,4 @@
-package com.projectn.awssdk.services.s3;
+package ai.granica.awssdk.services.s3;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.MissingFormatArgumentException;
@@ -21,7 +21,7 @@ import software.amazon.awssdk.services.s3.S3Configuration;
  * It provides the same builder as S3Client to configure and create a service client. Its endpoint always resolves to
  * Bolt Service URL as specified via the 'BOLT_URL' environment variable.
  */
-public interface BoltS3Client extends S3Client {
+public interface GranicaS3Client extends S3Client {
 
     // Get bolt url from quicksilver. Not from the env
 
@@ -31,9 +31,9 @@ public interface BoltS3Client extends S3Client {
 
 
     static S3ClientBuilder builder(){
-        if (BoltConfig.CustomDomain == null){
-            throw new MissingFormatArgumentException("BOLT_CUSTOM_DOMAIN is not set. \n"+
-            "Set the environment variable to BOLT_CUSTOM_DOMAIN=my-bolt.my-domain.com. This can be obtained from `projectn ls`");  
+        if (GranicaConfig.CustomDomain == null){
+            throw new MissingFormatArgumentException("GRANICA_CUSTOM_DOMAIN is not set. \n"+
+            "Set the environment variable to GRANICA_CUSTOM_DOMAIN=my-bolt.my-domain.com. This can be obtained from `granica ls`");
         }
         SSLContext sslcontext = null;
         try {
@@ -42,7 +42,7 @@ public interface BoltS3Client extends S3Client {
             System.out.println("SSL context is not initialized");
             e1.printStackTrace();
         }
-        ConnectionSocketFactory socketFactory = new SdkTlsSocketFactory(sslcontext, new BoltHostnameVerifier());
+        ConnectionSocketFactory socketFactory = new SdkTlsSocketFactory(sslcontext, new GranicaHostnameVerifier());
 
         SdkHttpClient client = ApacheHttpClient.builder().socketFactory(socketFactory).build();
         
@@ -52,7 +52,7 @@ public interface BoltS3Client extends S3Client {
                         .pathStyleAccessEnabled(true)
                         .build())
                 .overrideConfiguration(ClientOverrideConfiguration.builder()
-                        .putAdvancedOption(SdkAdvancedClientOption.SIGNER, BoltSigner.create())
+                        .putAdvancedOption(SdkAdvancedClientOption.SIGNER, GranicaSigner.create())
                         .putHeader("X-Bolt-Passthrough-Read", "disable")
                         .build());
     }
