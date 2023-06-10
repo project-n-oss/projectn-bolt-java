@@ -2,14 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>co.projectn</groupId>
-  <artifactId>bolt-java-sdk</artifactId>
+  <groupId>ai.granica</groupId>
+  <artifactId>granica-java-sdk</artifactId>
   <packaging>jar</packaging>
 
-  <version>1.0.2</version>
-  <name>bolt-java-sdk</name>
-  <description>ProjectN Bolt Java Client Library</description>
-  <url>https://gitlab.com/projectn-oss/projectn-bolt-java</url>
+  <version>1.0.4</version>
+  <name>granica-java-sdk</name>
+  <description>Granica Java Client Library</description>
+  <url>https://github.com/project-n-oss/projectn-bolt-java</url>
 
   <licenses>
     <license>
@@ -20,17 +20,17 @@
 
   <developers>
     <developer>
-      <name>Project N</name>
+      <name>Granica</name>
       <email>support@projectn.co</email>
       <organization>Project N</organization>
-      <organizationUrl>https://www.projectn.co/</organizationUrl>
+      <organizationUrl>https://www.granica.ai/</organizationUrl>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:git://gitlab.com/projectn-oss/projectn-bolt-java.git</connection>
-    <developerConnection>scm:git:ssh://gitlab.com:projectn-oss/projectn-bolt-java.git</developerConnection>
-    <url>https://gitlab.com/projectn-oss/projectn-bolt-java/tree/master</url>
+    <connection>scm:git:git://github.com/projectn-oss/projectn-bolt-java.git</connection>
+    <developerConnection>scm:git:ssh://github.com:projectn-oss/projectn-bolt-java.git</developerConnection>
+    <url>https://github.com/projectn-oss/projectn-bolt-java/tree/master</url>
   </scm>
 
   <distributionManagement>
