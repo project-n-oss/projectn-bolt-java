@@ -6,7 +6,7 @@
   <artifactId>granica-java-sdk</artifactId>
   <packaging>jar</packaging>
 
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <name>granica-java-sdk</name>
   <description>Granica Java Client Library</description>
   <url>https://github.com/project-n-oss/projectn-bolt-java</url>
