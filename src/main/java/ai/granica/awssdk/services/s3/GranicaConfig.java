@@ -14,7 +14,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
@@ -36,10 +35,10 @@ public class GranicaConfig {
     static String BoltHostname = String.format("bolt.%s.%s", Region, CustomDomain);
     static String QuicksilverUrl = String.format("https://quicksilver.%s.%s/services/bolt%s", Region, CustomDomain, ZoneId == null ? "": String.format("?az=%s", ZoneId));
     static LocalDateTime RefreshTime = LocalDateTime.now().plusSeconds(120);
-    static Map<String, List<String>> BoltEndpoints = null;// getBoltEndpoints("");
+    static Map<String, Object> BoltEndpoints = null;// getBoltEndpoints("");
     static Random rand = new Random();
 
-    private static Map<String, List<String>> getBoltEndpoints(String errIp){
+    private static Map<String, Object> getBoltEndpoints(String errIp){
         if (QuicksilverUrl == null || Region == null){
             return null;
         }
@@ -47,7 +46,7 @@ public class GranicaConfig {
         String requestUrl = errIp.length() > 0 ? 
                 String.format("%s&err=%s",QuicksilverUrl, errIp) : QuicksilverUrl;
         
-        Map<String, List<String>> out = parse(executeGetRequest(requestUrl));
+        Map<String, Object> out = parse(executeGetRequest(requestUrl));
         return out;
     }
 
@@ -65,11 +64,11 @@ public class GranicaConfig {
         }
     }
 
-    private static Map<String, List<String>> parse(String responseBody){
-        Map<String, List<String>> map = new HashMap<String, List<String>>();
+    private static Map<String, Object> parse(String responseBody){
         ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = null;
         try {
-            map = mapper.readValue(responseBody, new TypeReference<HashMap<String, List<String>>>() {});
+            map = mapper.readValue(responseBody, HashMap.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,15 +89,19 @@ public class GranicaConfig {
         // String[] endPointsKey;
         for (String endPointsKey : preferredOrder){
 
-            if (BoltEndpoints.containsKey(endPointsKey) && BoltEndpoints.get(endPointsKey).size()>0){
-                String selectedEndpoint = BoltEndpoints.get(endPointsKey).get(rand.nextInt(BoltEndpoints.get(endPointsKey).size()));
-                try {
-                    return new URI(String.format("https://%s",selectedEndpoint));
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+        	if (BoltEndpoints.containsKey(endPointsKey)) {
+        		List<String> endpoints = (List<String>)BoltEndpoints.get(endPointsKey);
+        		if (endpoints.size() > 0) {
+        			String selectedEndpoint = endpoints.get(rand.nextInt(endpoints.size()));
+        			try {
+        				return new URI(String.format("https://%s",selectedEndpoint));
+        			} catch (URISyntaxException e) {
+        				e.printStackTrace();
+        			}
+            	}
             }
         }
         return null;
     }
 }
+
